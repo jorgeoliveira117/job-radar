@@ -2,8 +2,8 @@
 
 A tiny, self-hosted job-search radar. Every weekday morning it fetches remote-job
 sources, filters them against my stack and location constraints, drops anything
-it has already shown me, and files the survivors as a GitHub Issue, which
-GitHub emails to me.
+it has already shown me, and files the survivors as a GitHub Issue in a target
+repository, which GitHub emails to me.
 
 Built because the alternatives failed in instructive ways: hosted automation
 tools sit behind trials and subscriptions, and global job feeds cap at their
@@ -30,8 +30,8 @@ Design notes:
   workflow after each run: versioned, inspectable, zero infrastructure.
 - **Sources fail independently.** `Promise.allSettled` means one dead feed
   degrades the digest instead of killing it.
-- **Notifications without SMTP.** Filing an Issue rides GitHub's own
-  notification pipeline; no email credentials anywhere.
+- **Notifications without SMTP.** Filing an Issue in a private output repo rides
+  GitHub's own notification pipeline; no email credentials anywhere.
 - **Tested where it matters.** The filter is the judgment layer, so the filter
   is what has tests.
 
@@ -41,8 +41,10 @@ Design notes:
 2. Tune `src/config.ts`: keywords, feeds, and source toggles/endpoints
    (use each `verifyInBrowser` flag as your reminder to re-check endpoints).
 3. Dry-run locally: `npm run radar` (prints the digest when no token is set).
-4. Push to GitHub, enable Actions, and trigger **Run workflow** once manually.
-5. Let the cron take it from there.
+4. Create a fine-grained token that can open issues in your private output repo,
+   then save it as the `JOB_RADAR_OUTPUT_TOKEN` Actions secret.
+5. Push to GitHub, enable Actions, and trigger **Run workflow** once manually.
+6. Let the cron take it from there.
 
 ## Roadmap
 

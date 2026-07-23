@@ -14,14 +14,19 @@ import { buildDigest } from "./digest.js";
 import type { Job } from "./types.js";
 
 async function createIssue(title: string, body: string): Promise<void> {
-  const repo = process.env.GITHUB_REPOSITORY;
-  const token = process.env.GITHUB_TOKEN;
-  if (!repo || !token) {
+  const workflowRepo = process.env.GITHUB_REPOSITORY;
+  const outputRepo = process.env.OUTPUT_GITHUB_REPOSITORY;
+  const outputToken = process.env.OUTPUT_GITHUB_TOKEN;
+  const targetRepo = outputToken && outputRepo ? outputRepo : workflowRepo;
+  const token = outputToken ?? process.env.GITHUB_TOKEN;
+
+  if (!targetRepo || !token) {
     console.log("No GITHUB_TOKEN/REPOSITORY; printing digest instead:\n");
     console.log(body);
     return;
   }
-  const res = await fetch(`https://api.github.com/repos/${repo}/issues`, {
+
+  const res = await fetch(`https://api.github.com/repos/${targetRepo}/issues`, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${token}`,
