@@ -26,7 +26,6 @@ export const CONFIG = {
   /**
    * Generic RSS feeds. Scoped category/tag feeds beat global ones:
    * their top-N *is* your top-N.
-   * TODO(jorge): verify each URL in a browser before first run.
    */
   rssFeeds: [
     "https://weworkremotely.com/categories/remote-front-end-programming-jobs.rss",
