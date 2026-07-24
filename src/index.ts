@@ -20,7 +20,7 @@ async function createIssue(title: string, body: string): Promise<void> {
   const targetRepo = outputRepo ?? workflowRepo;
   const token = outputToken ?? process.env.GITHUB_TOKEN;
 
-  if (!targetRepo || !token) {
+  if (targetRepo && !token) {
     console.log("No GITHUB_TOKEN/REPOSITORY; printing digest instead:\n");
     console.log(body);
     return;
