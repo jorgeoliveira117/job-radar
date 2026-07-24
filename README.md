@@ -17,7 +17,7 @@ scheduled workflows. No server, no trial, no scrolling.
 ## How it works
 
 ```
-cron (weekdays 07:00 UTC)
+cron (weekdays 07:17 UTC)
   └─ fetch sources (RSS categories · company boards · RemoteOK API · aggregators)
        └─ keyword filter (include/exclude, location heuristics)
             └─ dedupe against data/seen.json (committed back = free versioned state)
@@ -45,6 +45,12 @@ Design notes:
    then save it as the `JOB_RADAR_OUTPUT_TOKEN` Actions secret.
 5. Push to GitHub, enable Actions, and trigger **Run workflow** once manually.
 6. Let the cron take it from there.
+
+If a scheduled run is ever missed, check these first:
+
+- Scheduled workflows run only from the default branch.
+- Public repositories can have schedules auto-disabled after long inactivity.
+- GitHub does not guarantee exact start time; jobs on `:00` are the most commonly delayed.
 
 ## Roadmap
 
