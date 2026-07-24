@@ -13,15 +13,20 @@ import { loadSeen, saveSeen, unseenOnly } from "./dedupe.js";
 import { buildDigest } from "./digest.js";
 import type { Job } from "./types.js";
 
-async function createIssue(title: string, body: string): Promise<void> {
-  const workflowRepo = process.env.GITHUB_REPOSITORY;
-  const outputRepo = process.env.OUTPUT_GITHUB_REPOSITORY;
-  const outputToken = process.env.OUTPUT_GITHUB_TOKEN;
-  const targetRepo = outputRepo ?? workflowRepo;
-  const token = outputToken ?? process.env.GITHUB_TOKEN;
+function env(name: string): string | undefined {
+  const value = process.env[name]?.trim();
+  return value ? value : undefined;
+}
 
-  if (targetRepo && !token) {
-    console.log("No GITHUB_TOKEN/REPOSITORY; printing digest instead:\n");
+async function createIssue(title: string, body: string): Promise<void> {
+  const workflowRepo = env("GITHUB_REPOSITORY");
+  const outputRepo = env("OUTPUT_GITHUB_REPOSITORY");
+  const outputToken = env("OUTPUT_GITHUB_TOKEN");
+  const targetRepo = outputRepo ?? workflowRepo;
+  const token = outputToken ?? env("GITHUB_TOKEN");
+
+  if (!targetRepo || !token) {
+    console.log("No issue target repo/token; printing digest instead:\n");
     console.log(body);
     return;
   }
@@ -34,7 +39,12 @@ async function createIssue(title: string, body: string): Promise<void> {
     },
     body: JSON.stringify({ title, body, labels: ["digest"] }),
   });
-  if (!res.ok) throw new Error(`issue creation failed: HTTP ${res.status}`);
+  if (!res.ok) {
+    const responseText = await res.text();
+    throw new Error(
+      `issue creation failed for ${targetRepo}: HTTP ${res.status} ${responseText}`,
+    );
+  }
 }
 
 async function main(): Promise<void> {
