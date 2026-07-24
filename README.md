@@ -41,8 +41,11 @@ Design notes:
 2. Tune `src/config.ts`: keywords, feeds, and source toggles/endpoints
    (use each `verifyInBrowser` flag as your reminder to re-check endpoints).
 3. Dry-run locally: `npm run radar` (prints the digest when no token is set).
-4. Create a fine-grained token that can open issues in your private output repo,
-   then save it as the `JOB_RADAR_OUTPUT_TOKEN` Actions secret.
+4. If you want the digest to be filed in a different repo, set
+   `OUTPUT_GITHUB_REPOSITORY` in `.github/workflows/radar.yml` to
+   `owner/repo`. If it is omitted, the workflow writes back to the current
+   repository. Create a fine-grained token that can open issues in that output
+   repo, then save it as the `JOB_RADAR_OUTPUT_TOKEN` Actions secret.
 5. Push to GitHub, enable Actions, and trigger **Run workflow** once manually.
 6. Let the cron take it from there.
 

@@ -18,7 +18,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
-          OUTPUT_GITHUB_REPOSITORY: jorgeoliveira117/job-radar-output
+          OUTPUT_GITHUB_REPOSITORY:
           OUTPUT_GITHUB_TOKEN: ${{ secrets.JOB_RADAR_OUTPUT_TOKEN }}
       - name: Persist seen jobs
         run: |
